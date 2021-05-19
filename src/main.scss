@@ -1,0 +1,77 @@
+.fr{
+	display:flex;
+	flex-direction: row;
+}
+.fc{
+	 display:flex;
+	 flex-direction: column;
+ }
+.vc{
+	margin-top:auto;
+	margin-bottom: auto;
+}
+.hc{
+	margin-left:auto;
+	margin-right: auto;
+}
+.md-button{
+	margin: 0
+}
+a img{
+	border:none
+}
+a.undefault:link, a.undefault:link:active, a.undefault:visited, a.undefault:visited:active, a.undefault:hover{
+	color:#000;
+	text-decoration: none;
+}
+.mont{
+	font-family: 'Montserrat', sans-serif;
+}
+
+button.surrounding, button.undefault {
+	background: none repeat scroll 0 0 transparent;
+	border: medium none;
+	border-spacing: 0;
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+	text-decoration: none;
+	text-indent: 0;
+	cursor:pointer;
+}
+button.surrounding::-moz-focus-inner, button.undefault::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+.ycard{
+	background:#FFF7CD;
+	border: 3px solid white;
+	border-radius: 10px;
+	padding: 20px 12px;
+	box-shadow: 1px 2px #33333355;
+}
+button.dy{
+	background: #AB8CDC;
+	border-radius: 6px;
+	padding: 8px 12px;
+	border:none;
+	cursor:pointer;
+}
+
+.room-bg{
+	background-size: cover;
+	background-attachment: fixed;
+	background-repeat: no-repeat;
+	min-height: 100vh;
+}
+.room-png{
+	background-size: cover;
+	background-repeat: no-repeat;
+	min-height: 100vh;
+	padding: 0 2vw 8vh 2vw;
+}
+
+.above-room{
+}
