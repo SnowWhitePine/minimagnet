@@ -1,5 +1,5 @@
 <template>
-  <div class="fr">
+  <div class="fr" style="z-index: 9999">
     <router-link
       class="fc hc"
       style="color: inherit; text-decoration: none"
@@ -10,7 +10,7 @@
         class="hc"
         style="font-size: 1.2em; margin-bottom: 0.5em"
       >
-        Запасы
+        Покормить
       </div>
       <img src="/assets/eat.svg" style="height: 66px; margin-bottom: 0.3em" />
       <McBar style="height: 0.8em" :val="$root.barFood"></McBar>
@@ -25,7 +25,7 @@
         class="hc"
         style="font-size: 1.2em; margin-bottom: 0.5em"
       >
-        Учиться
+        Научить
       </div>
       <img src="/assets/learn.svg" style="height: 66px; margin-bottom: 0.3em" />
       <McBar style="height: 0.8em" :val="$root.barStudy"></McBar>
@@ -40,7 +40,7 @@
         class="hc"
         style="font-size: 1.2em; margin-bottom: 0.5em"
       >
-        Играть
+        Поиграть
       </div>
       <img src="/assets/play.svg" style="height: 66px; margin-bottom: 0.3em" />
       <McBar style="height: 0.8em" :val="$root.barPlay"></McBar>

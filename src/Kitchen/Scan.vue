@@ -51,6 +51,8 @@ export default {
   },
   methods: {
     success() {
+      this.$root.data.foodLeft = 3;
+      this.$root.data.magnets += 1
       this.done();
     },
     done() {

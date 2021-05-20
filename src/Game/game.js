@@ -24,6 +24,8 @@ export default function(rootEl){
 	let cartsCollectedImg=[], cartsCollectedBlock=[]
 	let cartOverflowDisplay, cartOverflowDisplay2,cartOverflowDisplay3
 	const done = new Set()
+	let bonusObj
+	let magnets = 0
 
 	const CONF = {
 		type: Phaser.AUTO,
@@ -40,10 +42,10 @@ export default function(rootEl){
 				// debug: true,
 				gravity: false,
 				setBounds: {
-					x: 0,
-					y: 0,
-					width: 1920,
-					height: 1080,
+					x: 20,
+					y: 20,
+					width: 1900,
+					height: 1060,
 				},
 				friction: 0,
 			},
@@ -90,6 +92,7 @@ export default function(rootEl){
 		this.load.image("cart0", "./cart/src/assets/cart0.png");
 		this.load.image("block", "./cart/src/assets/block.png");
 		this.load.image("redpx", "./cart/src/assets/redpx.png");
+		this.load.image("magnet", "./assets/magnet.svg");
 	}
 
 	function addBlock(x, y, w, h) {
@@ -112,28 +115,28 @@ export default function(rootEl){
 		STH = this;
 		map = this.add.image(0, 0, "map");
 		map.setOrigin(0, 0);
-		addBlock(368, 93, 52, 186);
-		addBlock(249, 438, 251, 78);
-		addBlock(249, 678, 251, 78);
-		addBlock(249, 912, 251, 78);
-		addBlock(855, 247, 451, 99);
-		addBlock(855, 488, 451, 99);
-		addBlock(855, 726, 451, 99);
-		addBlock(1457, 248, 446, 99);
-		addBlock(1457, 488, 446, 99);
-		addBlock(1457, 736, 446, 90);
-		addBlock(865, 1036, 424, 90);
-		addBlock(1604, 1036, 700, 90);
-		addBlock(1870, 900, 80, 200);
-		addBlock(1870, 620, 80, 290);
-		addBlock(1874, 128, 85, 230);
+		addBlock(410, 100, 52, 186);
+		addBlock(312, 493, 241, 73);
+		addBlock(312, 722, 241, 73);
+		addBlock(312, 947, 241, 73);
+		addBlock(875, 256, 421, 95);
+		addBlock(875, 487, 421, 95);
+		addBlock(875, 705, 421, 95);
+		addBlock(1445, 260, 426, 95);
+		addBlock(1445, 488, 426, 95);
+		addBlock(1445, 722, 426, 90);
+		addBlock(888, 1006, 400, 90);
+		addBlock(1610, 1006, 700, 90);
+		addBlock(1850, 880, 80, 200);
+		addBlock(1845, 609, 80, 278);
+		addBlock(1850, 137, 85, 230);
 		pl = this.matter.add
 			.image(50, 50, "cart0")
 			.setCollisionCategory(2)
 			.setScale(0.1);
 		spawnCart();
 		displayScore();
-		initQuest()
+		initQuest();
 	}
 
 	async function initQuest(){
@@ -141,12 +144,12 @@ export default function(rootEl){
 			let i
 			for(;!i||done.has(i); i=Math.ceil(Math.random()*QUESTS.length)){}
 			--i
-			const txt1 = STH.add.text(1000,5,QUESTS[i].msg, {font:'36px Arial Black',fill: '#000'})
+			const txt1 = STH.add.text(1000,5,QUESTS[i].msg, {font:'54px Arial Black',fill: '#000'})
 			const scoreInc = await new Promise(res=>{
 				QUESTS[i].init(res)
 			})
 			txt1.destroy()
-			const txt2 = STH.add.text(1000,5,`Отлично! Получи ${scoreInc} очков`, {font:'36px Arial Black',fill: '#000'})
+			const txt2 = STH.add.text(1000,5,`Отлично! Получи ${scoreInc} очков`, {font:'54px Arial Black',fill: '#000'})
 			setScore(score+scoreInc)
 			await new Promise(res=>setTimeout(res, 5000))
 			txt2.destroy()
@@ -156,7 +159,7 @@ export default function(rootEl){
 				return
 			}
 			if(done.size === QUESTS.length){
-				STH.add.text(1000,5,'Задания закончились', {font:'36px Arial Black',fill: '#000'})
+				STH.add.text(1000,5,'Задания закончились', {font:'54px Arial Black',fill: '#000'})
 				return
 			}
 		}
@@ -169,7 +172,7 @@ export default function(rootEl){
 		if(scoreDisplay){
 			scoreDisplay.destroy()
 		}
-		scoreDisplay = STH.add.text(410,5,'Баллы: '+score, {font:'36px Arial Black',fill:'#000'})
+		scoreDisplay = STH.add.text(410,5,'Баллы: '+score, {font:'54px Arial Black',fill:'#000'})
 	}
 
 	function clearCartsCollectedDisplay(){
@@ -278,8 +281,8 @@ export default function(rootEl){
 		let x, y;
 		let bl = [...blocks, {x0:550, y0:605, x1:610, y1:665}, {x0:0,y0:0,x1:374,y1:186}]
 		outer: for (;;) {
-			x = Math.random() * 1840 + 40;
-			y = Math.random() * 1000 + 40;
+			x = Math.random() * 1800 + 60;
+			y = Math.random() * 960 + 60;
 			for (let { x0, y0, x1, y1 } of bl) {
 				if (x0 <= x + 40 && x1 >= x - 40 && y0 <= y + 40 && y1 >= y - 40) {
 					continue outer;
@@ -293,6 +296,23 @@ export default function(rootEl){
 			.setCollisionCategory(8)
 			.setCollidesWith(2);
 		it.setOnCollideWith(pl, function () {
+			if(magnets===0 && !bonusObj){
+				if(Math.random()*10 < 1){
+					bonusObj = STH.matter.add.image(600,600,"magnet")
+						.setCollisionCategory(8)
+						.setCollidesWith(2)
+						.setOnCollideWith(pl,function(){
+							magnets+=1
+							bonusObj.destroy()
+							bonusObj = null
+						})
+					setTimeout(()=>{
+						if(bonusObj){
+							bonusObj.destroy()
+						}
+					},15000)
+				}
+			}
 			const { x, y, angle } = pl;
 			pl.x = it.x;
 			pl.y = it.y;
@@ -322,7 +342,7 @@ export default function(rootEl){
 			.setAngle(a)
 			.setCollisionCategory(4)
 			.setCollidesWith(1);
-		setScore(score + 2);
+		setScore(score + 10);
 		carts = [it, ...carts];
 		if (carts.length > 0 && !dropoff) {
 			mkDropoff();
@@ -348,7 +368,7 @@ export default function(rootEl){
 					addCartsCollectedOld(...args)
 					if(cartsCollected>=9){
 						addCartsCollected = addCartsCollectedOld
-						succeed(20)
+						succeed(50)
 					}
 				}
 			}
@@ -364,7 +384,7 @@ export default function(rootEl){
 					addCartsCollectedOld(...args)
 					if(cartsCollected>=18){
 						addCartsCollected = addCartsCollectedOld
-						succeed(30)
+						succeed(100)
 					}
 				}
 			}
@@ -380,13 +400,13 @@ export default function(rootEl){
 					addCartsCollectedOld(...args)
 					if(cartsCollected>=27){
 						addCartsCollected = addCartsCollectedOld
-						succeed(40)
+						succeed(150)
 					}
 				}
 			}
 		},
 		{
-			msg:'Сколько тележек соберешь за минуту?',
+			msg:'Сколько тележек соберешь?',
 			init: (succeed)=>{
 				let i=0
 				const addFollowerOld = addFollower
@@ -403,9 +423,9 @@ export default function(rootEl){
 					}
 					if(t<0){
 						clearInterval(interval)
-						succeed(i*4)
+						succeed(i*8)
 					}else{
-						text = STH.add.text(1000,40,`Осталось: ${t}`, {font:'36px Arial Black',fill: t>10 ? '#000' : '#a00'})
+						text = STH.add.text(1000,60,`Осталось: ${t}`, {font:'54px Arial Black',fill: t>10 ? '#000' : '#a00'})
 					}
 				},1000)
 			}
@@ -426,8 +446,15 @@ export default function(rootEl){
 			screen.orientation.unlock()
 		}
 		rootEl.hidden = true
-		document.exitFullscreen()
-		resolve({score:score, quests:done.size})
+		if(document.fullscreenElement){
+			document.exitFullscreen()
+		}
+		const res ={
+			score:score,
+			quests:done.size,
+			magnets: magnets
+		}
+		resolve(res)
 	}
 
 	function onFsChange(){

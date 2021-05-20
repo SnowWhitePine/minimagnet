@@ -8,6 +8,7 @@ import Quiz from "./Quiz";
 import ChooseChar from "./ChooseChar";
 import Home from "./Home";
 import Clear from "./Clear";
+import Result from "./Result";
 import CharPic from "./components/CharPic";
 import McBar from "./components/McBar";
 import Navigation from "./components/Navigation";
@@ -51,6 +52,7 @@ const router = new VueRouter({
     {path:'/chooseChar',component:ChooseChar},
     {path:'/home',component:Home},
     {path:'/clear',component:Clear},
+    {path:'/result',component:Result},
     {path:'/',component:Home},
   ]
 })
@@ -77,34 +79,31 @@ window.app = new Vue({
         study:0,
         play:0,
       },
+      studyStage:0,
       foodLeft: 2,
       magnets: 0
     }
     data = merge(data, JSON.parse(localStorage.getItem("data") || '{}'))
-    this.$nextTick(()=>{
-      if(data.state===1){
-        if(this.$route.path!=='/chooseChar'){
-          router.replace('/chooseChar')
-        }
-      }else if(data.state===2){
-        if(this.$route.path==='/'){
-          router.replace('/home')
-        }
-      }
-    })
-    return {data}
+    return {
+      data,
+      dialog:null,
+      fillRecompute:true
+    }
   },
   computed:{
     char(){
       return this.data.char
     },
     barFood() {
+      this.fillRecompute
       return this.toPctLeft(this.data.fill.food);
     },
     barStudy() {
+      this.fillRecompute
       return this.toPctLeft(this.data.fill.study);
     },
     barPlay() {
+      this.fillRecompute
       return this.toPctLeft(this.data.fill.play);
     },
   },
@@ -129,6 +128,20 @@ window.app = new Vue({
       },
       deep:true
     }
+  },
+  mounted(){
+    if(this.data.state===1){
+      if(this.$route.path!=='/chooseChar'){
+        this.$router.replace('/chooseChar')
+      }
+    }else if(this.data.state===2){
+      if(this.$route.path==='/' || this.$route.path==='/chooseChar'){
+        this.$router.replace('/home')
+      }
+    }
+    setInterval(()=>{
+      this.fillRecompute = !this.fillRecompute
+    },1000)
   }
 })
 window.app.$mount("#app");

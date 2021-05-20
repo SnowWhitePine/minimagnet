@@ -6,7 +6,7 @@
       background-image: url('/assets/bg_blue_paws.svg');
     "
   >
-    <div style="flex-grow: 0.5" />
+    <div style="flex-grow: 1" />
     <CharBar />
     <div
       class="above-room"
@@ -47,7 +47,7 @@
     </div>
     <div style="flex-grow: 1" />
     <div style="text-align: center">
-      <CharPic />
+      <CharPic h="140px" :dialog="false"/>
     </div>
     <div style="flex-grow: 1" />
     <Navigation />

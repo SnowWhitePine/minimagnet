@@ -22,11 +22,6 @@
         </button>
       </div>
       <div :style="`text-align:center;width:100%`">
-        <!--        <McBar-->
-        <!--          style="height: 0.8em"-->
-        <!--          :val="initiated.size"-->
-        <!--          :maxValue="quizLength"-->
-        <!--        ></McBar>-->
         <svg v-for="(it, i) of progress" :key="i" height="1.2em" width="1.2em">
           <circle
             v-if="!(i % 2)"
@@ -150,64 +145,6 @@
     </div>
     <br />
   </div>
-  <div v-else-if="state === 3" class="mont">
-    <md-toolbar style="background: #ffffff44">
-      <span class="md-title">Результаты:</span>
-    </md-toolbar>
-    <md-card style="padding: 8px">
-      <md-list class="md-double-line" md-theme="green-red">
-        <md-list-item v-if="correct.length">
-          <md-icon
-            class="md-primary"
-            style="color: var(--md-theme-green-red-primary)"
-            >check</md-icon
-          >
-          <div class="md-list-item-text">
-            <span
-              >Правильных ответов:
-              <b style="color: var(--md-theme-green-red-primary)">{{
-                correct.length
-              }}</b></span
-            >
-          </div>
-        </md-list-item>
-        <md-list-item v-if="incorrect.length">
-          <md-icon
-            class="md-accent"
-            style="color: var(--md-theme-green-red-accent)"
-            >close</md-icon
-          >
-          <div class="md-list-item-text">
-            <span
-              >Неправильных ответов:
-              <b style="color: var(--md-theme-green-red-accent)">{{
-                incorrect.length
-              }}</b></span
-            >
-          </div>
-        </md-list-item>
-        <md-list-item v-if="resultGrowth">
-          <md-icon
-            class="md-primary"
-            style="color: var(--md-theme-green-red-primary)"
-            >check</md-icon
-          >
-          <div class="md-list-item-text">
-            <span
-              >Магнитенок вырос на:
-              <b style="color: var(--md-theme-green-red-primary)">{{
-                resultGrowth
-              }}</b></span
-            >
-          </div>
-        </md-list-item>
-      </md-list>
-    </md-card>
-    <br />
-    <md-button class="md-raised" @click="back" style="margin-left: 2vw"
-      >Вернуться в комнату</md-button
-    >
-  </div>
   <div v-else>Загрузка...</div>
 </template>
 
@@ -266,20 +203,18 @@ export default {
       return new RegExp("^" + this.q.a.c + "$", "i").test(it);
     },
     end() {
-      this.q = null;
-      this.state = 3;
-      if (this.correct.length + this.incorrect.length === this.qq.length) {
-        this.resultGrowth = 3;
-      }
       if (this.correct.length + this.incorrect.length === 0) {
-        this.back();
+        this.$router.push("/home");
       }
-    },
-    back() {
-      if (this.qq.length === this.correct.length + this.incorrect.length) {
-        this.$root.addProgress(this.resultGrowth);
+      if(this.correct.length + this.incorrect.length === this.quizLength){
+        if(this.$root.data.studyStage===0){
+          this.$root.data.studyStage=1
+        }
       }
-      this.$router.push("/home");
+      this.$root.data.fill.study = Date.now();
+      this.resultGrowth = this.correct.length * 50;
+      this.$root.addProgress(this.resultGrowth);
+      this.$router.push({path:'/result',query:{ac:this.correct.length, ai:this.incorrect.length, sc:this.resultGrowth}})
     },
   },
   computed: {
@@ -306,5 +241,3 @@ export default {
   },
 };
 </script>
-
-<style></style>

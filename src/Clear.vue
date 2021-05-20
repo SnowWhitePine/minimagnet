@@ -1,13 +1,17 @@
 <template>
-<div></div>
+  <div></div>
 </template>
 
 <script>
 export default {
   name: "Clear",
-  mounted(){
-    localStorage.removeItem("data")
-    window.location.reload()
-  }
-}
+  mounted() {
+    localStorage.removeItem("data");
+    if(this.$root.data.char.type){
+      window.location.reload()
+    }else{
+      window.location = "#/chooseChar";
+    }
+  },
+};
 </script>

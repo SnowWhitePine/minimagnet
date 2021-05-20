@@ -12,6 +12,7 @@
       <div style="flex-grow: 24" />
       <Navigation notext="t" />
       <div style="flex-grow: 2" />
+      <CharPic room="kitchen"/>
       <div
         style="
           position: absolute;
@@ -22,22 +23,18 @@
         class="fr"
       >
         <div style="flex-basis: 80%" class="fr">
-          <div style="flex-grow: 1" />
-          <img
-            v-if="$root.foodLeft > 0"
-            src="/assets/apple.svg"
-            style="padding: 0 0.5em; height: 4em"
-          />
-          <img
-            v-if="$root.foodLeft > 1"
-            src="/assets/apple.svg"
-            style="padding: 0 0.5em; height: 4em"
-          />
-          <img
-            v-if="$root.foodLeft > 2"
-            src="/assets/apple.svg"
-            style="padding: 0 0.5em; height: 4em"
-          />
+          <div style="flex-grow: 2" />
+          <button
+            v-for="i of apples"
+            class="undefault"
+            @click="eatApple"
+            :key="i"
+          >
+            <img
+              src="/assets/apple.svg"
+              style="padding: 0 0.5em; height: 4em"
+            />
+          </button>
           <div style="flex-grow: 1" />
         </div>
         <router-link class="undefault" to="/kitchen/scan" style="flex-grow: 1">
@@ -51,8 +48,26 @@
 <script>
 export default {
   name: "Kitchen",
-  mounted() {
-    this.$el.scrollIntoView({ block: "bottom" });
+  methods: {
+    eatApple() {
+      if(this.$root.barFood > 50){
+        this.$root.dialog = 'Я еще не проголодался'
+        return
+      }
+      this.$root.data.magnets+=1
+      this.$root.dialog = 'Уммм... вкустое яблочко'
+      this.$root.data.foodLeft -= 1;
+      this.$root.data.fill.food = Date.now();
+      this.$root.addProgress(50);
+    },
+  },
+  computed: {
+    apples() {
+      return "0"
+        .repeat(this.$root.data.foodLeft)
+        .split("")
+        .map((_, i) => i);
+    },
   },
 };
 </script>
